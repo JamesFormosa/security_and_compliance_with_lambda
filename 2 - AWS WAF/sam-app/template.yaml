@@ -1,0 +1,162 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    resources for aws waf lab
+
+Resources:
+
+    TradeLedgerTable:
+        Type: AWS::DynamoDB::Table 
+        Properties:
+            TableName: trade_ledger
+            AttributeDefinitions:
+              -
+               AttributeName: market
+               AttributeType: S
+              -
+               AttributeName: trade_date
+               AttributeType: S
+            KeySchema:
+              -
+               AttributeName: market
+               KeyType: HASH
+              -
+               AttributeName: trade_date
+               KeyType: RANGE
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+            SSESpecification: 
+              SSEEnabled: true
+              
+    TradeLedgerApi:
+        Type: AWS::ApiGateway::RestApi
+        Properties:
+          Name: trade_ledger_api
+          
+    TradeResource:
+        Type: AWS::ApiGateway::Resource
+        Properties:
+          RestApiId: !Ref TradeLedgerApi
+          ParentId: !GetAtt
+            - TradeLedgerApi
+            - RootResourceId
+          PathPart: trades
+          
+    TradePutMethod:
+        Type: AWS::ApiGateway::Method
+        Properties:
+          RestApiId: !Ref TradeLedgerApi
+          ResourceId: !Ref TradeResource
+          HttpMethod: POST
+          AuthorizationType: NONE
+          MethodResponses:
+            - StatusCode: 200
+          Integration:
+            Type: AWS
+            Credentials: !GetAtt TradeLedgerApiIamRole.Arn
+            IntegrationHttpMethod: POST
+            IntegrationResponses:
+              - StatusCode: 200 
+            Uri: arn:aws:apigateway:us-west-2:dynamodb:action/PutItem
+            RequestTemplates:
+              {"application/json":"{\n \"TableName\": \"trade_ledger\",\n \"Item\": {\n \"market\": {\n \"S\": \"$input.path('$.market')\"\n },\n \"trade_date\": {\n \"S\": \"$input.path('$.trade_date')\"\n },\n \"quantity\": {\n \"N\": \"$input.path('$.quantity')\"\n },\n \"transaction_type\": {\n \"S\": \"$input.path('$.transaction_type')\"\n }\n }\n }\n"}
+
+    TradeLedgerTstDeployment:
+        Type: AWS::ApiGateway::Deployment
+        Properties:
+          RestApiId: !Ref TradeLedgerApi
+          StageName: tst
+          
+    TradeLedgerApiIamRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                - Effect: Allow
+                  Principal:
+                    Service:
+                    - 'apigateway.amazonaws.com'
+                  Action:
+                    - 'sts:AssumeRole'
+            ManagedPolicyArns:
+              - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+            Policies:
+            - PolicyName: trade_ledger_api_access
+              PolicyDocument:
+                  Version: 2012-10-17
+                  Statement:
+                    - Effect: Allow
+                      Action:
+                      - dynamodb:PutItem
+                      - dynamodb:GetItem
+                      - dynamodb:Scan
+                      - dynamodb:Query
+                      - logs:*
+                      Resource: !GetAtt TradeLedgerTable.Arn
+                      
+    ArtilleryFilesBucket:
+        Type: AWS::S3::Bucket
+    
+    ArtilleryInstanceProfile:
+        Type: AWS::IAM::InstanceProfile
+        Properties:
+          Roles:
+            - !Ref ArtilleryAccessIamRole
+    
+    ArtilleryAccessIamRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                - Effect: Allow
+                  Principal:
+                    Service:
+                    - 'ec2.amazonaws.com'
+                  Action:
+                    - 'sts:AssumeRole'
+            Policies:
+            - PolicyName: artillery_s3_object_access
+              PolicyDocument:
+                  Version: 2012-10-17
+                  Statement:
+                    - Effect: Allow
+                      Action:
+                      - s3:GetObject
+                      - s3:ListBucket
+                      Resource: 
+                        - !GetAtt ArtilleryFilesBucket.Arn
+                        - !Join 
+                            - ''
+                            - - !GetAtt ArtilleryFilesBucket.Arn
+                              - '/*'
+    
+    ArtilleryElasticIPOne:
+        Type: AWS::EC2::EIP
+        
+    ArtilleryElasticIPTwo:
+        Type: AWS::EC2::EIP
+    
+    BusinessPartnersIPSet:
+        Type: AWS::WAFv2::IPSet
+        Properties:
+          Name: usse_business_partners
+          Scope: REGIONAL
+          IPAddressVersion: IPV4
+          Addresses:
+            - !Join
+                - ''
+                - - !Ref ArtilleryElasticIPOne
+                  - '/32'
+                      
+Outputs:
+
+    TradeLedgerTable:
+      Description: "dynamodb table for tracking trades"
+      Value: !GetAtt TradeLedgerTable.Arn
+
+    ArtilleryFilesBucket:
+      Description: "s3 bucket for artillery execution files"
+      Value: !Ref ArtilleryFilesBucket
