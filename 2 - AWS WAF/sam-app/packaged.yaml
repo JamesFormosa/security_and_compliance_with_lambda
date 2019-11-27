@@ -4,6 +4,42 @@ Description: 'resources for aws waf lab
 
   '
 Resources:
+  UpdateIPListFunctionIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+      - PolicyName: update_ip_lambda_access
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - wafv2:DeleteIPSet
+            - wafv2:ListIPSets
+            - wafv2:UpdateIPSet
+            - wafv2:GetIPSet
+            - wafv2:GetWebACL
+            - logs:*
+            Resource: '*'
+  UpdateIPListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://frankfurt-testing/waf/ef8b480a8049b7d217ca208cc8e62170
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      Role:
+        Fn::GetAtt:
+        - UpdateIPListFunctionIamRole
+        - Arn
   TradeLedgerTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -99,6 +135,9 @@ Resources:
             S\": \"$input.params('market')\"} \n} \n}"
   TradeLedgerTstDeployment:
     Type: AWS::ApiGateway::Deployment
+    DependsOn:
+    - TradeGetMethod
+    - TradePutMethod
     Properties:
       RestApiId:
         Ref: TradeLedgerApi
