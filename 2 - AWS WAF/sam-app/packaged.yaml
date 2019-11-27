@@ -37,6 +37,14 @@ Resources:
         - TradeLedgerApi
         - RootResourceId
       PathPart: trades
+  TradeMarketResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId:
+        Ref: TradeLedgerApi
+      ParentId:
+        Ref: TradeResource
+      PathPart: '{market}'
   TradePutMethod:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -64,6 +72,31 @@ Resources:
             : {\n \"S\": \"$input.path('$.trade_date')\"\n },\n \"quantity\": {\n\
             \ \"N\": \"$input.path('$.quantity')\"\n },\n \"transaction_type\": {\n\
             \ \"S\": \"$input.path('$.transaction_type')\"\n }\n }\n }\n"
+  TradeGetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId:
+        Ref: TradeLedgerApi
+      ResourceId:
+        Ref: TradeMarketResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      MethodResponses:
+      - StatusCode: 200
+      Integration:
+        Type: AWS
+        Credentials:
+          Fn::GetAtt:
+          - TradeLedgerApiIamRole
+          - Arn
+        IntegrationHttpMethod: POST
+        IntegrationResponses:
+        - StatusCode: 200
+        Uri: arn:aws:apigateway:us-west-2:dynamodb:action/Query
+        RequestTemplates:
+          application/json: "{\n \"TableName\": \"trade_ledger\", \n \"KeyConditionExpression\"\
+            : \"market = :v1\", \n \"ExpressionAttributeValues\": {\n \":v1\": {\"\
+            S\": \"$input.params('market')\"} \n} \n}"
   TradeLedgerTstDeployment:
     Type: AWS::ApiGateway::Deployment
     Properties:
@@ -139,6 +172,8 @@ Resources:
                   - Arn
                 - /*
   ArtilleryElasticIPOne:
+    Type: AWS::EC2::EIP
+  ArtilleryElasticIPTwo:
     Type: AWS::EC2::EIP
   BusinessPartnersIPSet:
     Type: AWS::WAFv2::IPSet
