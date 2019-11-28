@@ -98,3 +98,30 @@ artillery run test.yaml
 \* If for some reason you get response codes of 200, confirm that the tst stage is associated withn the Web ACL and the defaule action is set to Block. These are easy steps to miss.
 
 ### Configure Lambda Function
+
+Going to the console to update our IP Lists is always an option but not one that will scale as our business partnerships grow. A more viable approach will involve some sort of automation, a goal for which AWS Lambda is very well-suited. In this section, we'll explore this option by implementing a very simple lambda function for updating our IP Lists.
+
+1. Navigate to the Lambda console and open the UpdateIPListFunction. The code was provided through ClodFormation, but there are a few configuration changes we need to make here.
+2. Our WAF implementation relies on WAFv2 which was released less than a month ago and is only available in the newest version of the Python Boto3 library. This version is not yet available in the Boto3 libraries that are included in the AWS Lambda runtimes. We'll leverage Lambda layers to overcome this limitation.
+3. Navigate to Layers in the Lambda console and click Create Layer.
+4. Name the layer boto3\_1\_10\_28 and upload the python.zip file located in the folder of that name under 4 - Resources.
+5. Once the layer is complete, navigate back to Functions console and re-open the UpdateIPListFunction.
+6. Click on Layers, scroll to the bottom of the function and click Add a layer.
+7. Select the layer just created and click Add.
+8. Click configure test events and add a new test event based on the HelloWorld template.
+9. Name the new test event and paste the follwoing json in to the payload.
+```
+{
+  "ip_set_name": "IP-SET-NAME-HERE",
+  "ip_set_id": "IP-SET-ID-HERE",
+  "scope": "REGIONAL",
+  "new_ip":"SECOND-IP-ADDRESS-HERE/32"
+}
+```
+10. Click Save.
+11. Click Test from the function console.
+12. Navigate to the IP Set and confirm that there are now two approved IP addresses in our IP Set.
+13. Log back into the second EC2 instance and re-run the following command. You shgould receive reposnse codes of 200 this time.
+```
+artillery run test.yaml
+```
