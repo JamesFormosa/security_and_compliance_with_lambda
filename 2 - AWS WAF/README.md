@@ -2,6 +2,8 @@
 
 ## Setup Artillery Instances
 
+\*You'll need the name of your ArtilleryFilesBucket from the Resources section of WAF Lab CloudFormation stack. This is the value in the field labeled Physical ID.
+
 ### Adjust the default security group settings in the default vpc to allow ssh access from your ip.
     
 1. Navigate to the EC2 dashboard and click on Security groups under Resources.
@@ -28,6 +30,15 @@ Configuration Option | Value
 Number of instances | 2
 Auto-assign Public IP | Disable
 IAM Role | ArtilleryInstanceProfile
+
+6. Paste the following code into the User data section, inserting the name of your bucket as indicated. 
+
+```bash
+#!/bin/bash
+sudo yum update -y
+cd /home/ec2-user
+aws s3 cp s3://YOUR-BUCKET-HERE . --recursive
+```
 
 ### Review the Resources Being Protected
 ### Complete Setup of WAF
