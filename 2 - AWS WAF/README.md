@@ -23,10 +23,10 @@
 4. In Step 2: Choose an Instance Type, take the default and click on Next: Configure Instance Details.
 5. In Step 3: Configure Instance Details, make the following changes:
    
-       Configuration Option | Value
-       ---------------------|------
-       Number of instances | 2
-       Auto-assign Public IP | Disable
+Configuration Option | Value
+---------------------|------
+Number of instances | 2
+Auto-assign Public IP | Disable
 
 2. Review the Resources Being Protected
 3. Complete Setup of WAF
