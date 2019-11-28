@@ -22,6 +22,7 @@
 3. In Step 1: Choose an Amazon Machine Image, open the My AMIs tab and select the artillery image.
 4. In Step 2: Choose an Instance Type, take the default and click on Next: Configure Instance Details.
 5. In Step 3: Configure Instance Details, make the following changes:
+
 Configuration Option | Value
 ---------------------|------
 Number of instances | 2
