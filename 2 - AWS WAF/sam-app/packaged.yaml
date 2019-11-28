@@ -101,7 +101,12 @@ Resources:
         IntegrationHttpMethod: POST
         IntegrationResponses:
         - StatusCode: 200
-        Uri: arn:aws:apigateway:us-west-2:dynamodb:action/PutItem
+        Uri:
+          Fn::Join:
+          - ''
+          - - 'arn:aws:apigateway:'
+            - Ref: AWS::Region
+            - :dynamodb:action/PutItem
         RequestTemplates:
           application/json: "{\n \"TableName\": \"trade_ledger\",\n \"Item\": {\n\
             \ \"market\": {\n \"S\": \"$input.path('$.market')\"\n },\n \"trade_date\"\
@@ -128,7 +133,12 @@ Resources:
         IntegrationHttpMethod: POST
         IntegrationResponses:
         - StatusCode: 200
-        Uri: arn:aws:apigateway:us-west-2:dynamodb:action/Query
+        Uri:
+          Fn::Join:
+          - ''
+          - - 'arn:aws:apigateway:'
+            - Ref: AWS::Region
+            - :dynamodb:action/Query
         RequestTemplates:
           application/json: "{\n \"TableName\": \"trade_ledger\", \n \"KeyConditionExpression\"\
             : \"market = :v1\", \n \"ExpressionAttributeValues\": {\n \":v1\": {\"\
@@ -236,3 +246,10 @@ Outputs:
     Description: s3 bucket for artillery execution files
     Value:
       Ref: ArtilleryFilesBucket
+  MyStacksRegion:
+    Value:
+      Fn::Join:
+      - ''
+      - - 'arn:aws:apigateway:'
+        - Ref: AWS::Region
+        - :dynamodb:action/Query
