@@ -100,7 +100,12 @@ Resources:
             IntegrationHttpMethod: POST
             IntegrationResponses:
               - StatusCode: 200 
-            Uri: arn:aws:apigateway:us-west-2:dynamodb:action/PutItem
+            Uri: 
+              !Join
+                - ''
+                - - 'arn:aws:apigateway:'
+                  - !Ref AWS::Region
+                  - ':dynamodb:action/PutItem'
             RequestTemplates:
               {"application/json":"{\n \"TableName\": \"trade_ledger\",\n \"Item\": {\n \"market\": {\n \"S\": \"$input.path('$.market')\"\n },\n \"trade_date\": {\n \"S\": \"$input.path('$.trade_date')\"\n },\n \"quantity\": {\n \"N\": \"$input.path('$.quantity')\"\n },\n \"transaction_type\": {\n \"S\": \"$input.path('$.transaction_type')\"\n }\n }\n }\n"}
     
@@ -119,7 +124,12 @@ Resources:
             IntegrationHttpMethod: POST
             IntegrationResponses:
               - StatusCode: 200 
-            Uri: arn:aws:apigateway:us-west-2:dynamodb:action/Query
+            Uri:
+              !Join
+                - ''
+                - - 'arn:aws:apigateway:'
+                  - !Ref AWS::Region
+                  - ':dynamodb:action/Query'
             RequestTemplates:
               {"application/json":"{\n \"TableName\": \"trade_ledger\", \n \"KeyConditionExpression\": \"market = :v1\", \n \"ExpressionAttributeValues\": {\n \":v1\": {\"S\": \"$input.params('market')\"} \n} \n}"}
     
@@ -225,3 +235,11 @@ Outputs:
     ArtilleryFilesBucket:
       Description: "s3 bucket for artillery execution files"
       Value: !Ref ArtilleryFilesBucket
+      
+    MyStacksRegion:
+      Value: 
+        !Join
+          - ''
+          - - 'arn:aws:apigateway:'
+            - !Ref AWS::Region
+            - ':dynamodb:action/Query'
