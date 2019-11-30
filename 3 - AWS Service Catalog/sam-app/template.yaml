@@ -1,44 +1,107 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-    sam-app
-
-    Sample SAM Template for sam-app
-
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
-Globals:
-    Function:
-        Timeout: 3
-
+    aws service catalog lab assets
 
 Resources:
-
-    HelloWorldFunction:
-        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    
+    ProductFilesBucket:
+        Type: AWS::S3::Bucket
+    
+    ExpireProductFunctionRole:
+        Type: AWS::IAM::Role
         Properties:
-            CodeUri: hello_world/
+            AssumeRolePolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                - Effect: Allow
+                  Principal:
+                    Service:
+                    - 'lambda.amazonaws.com'
+                  Action:
+                    - 'sts:AssumeRole'
+            ManagedPolicyArns:
+            - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+            Policies:
+              - PolicyName: lambda_service_catalog_access
+                PolicyDocument:
+                  Version: 2012-10-17
+                  Statement:
+                    - Effect: Allow
+                      Action:
+                        - servicecatalog:DisassociateProductFromPortfolio
+                      Resource: '*'
+              - PolicyName : lambda_dynamodb_access
+                PolicyDocument:
+                  Version: 2012-10-17
+                  Statement:
+                    - Effect: Allow
+                      Action:
+                        - dynamodb:Query
+                      Resource:
+                        - !GetAtt ProductExpirationsTable.Arn
+                        - !Join 
+                             - ''
+                             - - !GetAtt ProductExpirationsTable.Arn
+                               - '/*'
+                              
+    ExpireProductFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: expire_service_catalog_product/
             Handler: app.lambda_handler
             Runtime: python3.7
-            Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
-                Variables:
-                    PARAM1: VALUE
-            Events:
-                HelloWorld:
-                    Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-                    Properties:
-                        Path: /hello
-                        Method: get
+            Role: !GetAtt ExpireProductFunctionRole.Arn
+            
+    ProductExpirationsTable:
+        Type: AWS::DynamoDB::Table 
+        Properties:
+            TableName: product_expirations
+            AttributeDefinitions:
+              -
+               AttributeName: portfolio_id
+               AttributeType: S
+              -
+               AttributeName: product_id
+               AttributeType: S
+              -
+               AttributeName: expiration_date
+               AttributeType: S
+            KeySchema:
+              -
+               AttributeName: portfolio_id
+               KeyType: HASH
+              -
+               AttributeName: product_id
+               KeyType: RANGE
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+            GlobalSecondaryIndexes:
+              -
+                IndexName: expiration_date_index
+                KeySchema:
+                  - 
+                    AttributeName: expiration_date
+                    KeyType: HASH
+                Projection:
+                  NonKeyAttributes:
+                    - portfolio_id
+                    - product_id
+                  ProjectionType: INCLUDE
+                ProvisionedThroughput:
+                  ReadCapacityUnits: 5
+                  WriteCapacityUnits: 5
+            SSESpecification: 
+              SSEEnabled: true
+
 
 Outputs:
-
-    HelloWorldApi:
-      Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-
-    HelloWorldFunction:
-      Description: "Hello World Lambda Function ARN"
-      Value: !GetAtt HelloWorldFunction.Arn
-
-    HelloWorldFunctionIamRole:
-      Description: "Implicit IAM Role created for Hello World function"
-      Value: !GetAtt HelloWorldFunctionRole.Arn
+    
+    ProductFilesBucket:
+      Description: "s3 bucket for product template files"
+      Value: !Ref ProductFilesBucket
+      
+    ProductExpirationsTable:
+      Description: "dynamodb table for tracking trades"
+      Value: !GetAtt ProductExpirationsTable.Arn
