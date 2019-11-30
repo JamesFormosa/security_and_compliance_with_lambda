@@ -10,6 +10,9 @@ mkdir git_hub
 cd git_hub
 git clone https://github.com/JamesFormosa/security_and_compliance_with_lambda
 
+Share the artillery image
+Share the product template files
+
 1 - AWS Config Rules and Remediation
 
 sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket las-event-### --s3-prefix config
@@ -35,3 +38,5 @@ aws cloudformation deploy --template-file /home/ec2-user/environment/git_hub/sec
 References:
 
 https://github.com/awslabs/aws-config-rules
+
+https://aws.amazon.com/blogs/mt/how-to-update-aws-service-catalog-provisioned-products-to-new-product-versions-and-report-changes-using-aws-step-functions-aws-lambda-and-amazon-athena/
