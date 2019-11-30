@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'aws service catalog lab assets
+
+  '
+Resources:
+  ExpireProductFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+      - PolicyName: lambda_service_catalog_access
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - servicecatalog:DisassociateProductFromPortfolio
+            Resource: '*'
+      - PolicyName: lambda_dynamodb_access
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:Query
+            Resource:
+            - Fn::GetAtt:
+              - ProductExpirationsTable
+              - Arn
+            - Fn::Join:
+              - ''
+              - - Fn::GetAtt:
+                  - ProductExpirationsTable
+                  - Arn
+                - /*
+  ExpireProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://frankfurt-testing/cat/8d30cf773e4f24a046599a2573cbcebc
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      Role:
+        Fn::GetAtt:
+        - ExpireProductFunctionRole
+        - Arn
+  ProductExpirationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: product_expirations
+      AttributeDefinitions:
+      - AttributeName: portfolio_id
+        AttributeType: S
+      - AttributeName: product_id
+        AttributeType: S
+      - AttributeName: expiration_date
+        AttributeType: S
+      KeySchema:
+      - AttributeName: portfolio_id
+        KeyType: HASH
+      - AttributeName: product_id
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      GlobalSecondaryIndexes:
+      - IndexName: expiration_date_index
+        KeySchema:
+        - AttributeName: expiration_date
+          KeyType: HASH
+        Projection:
+          NonKeyAttributes:
+          - portfolio_id
+          - product_id
+          ProjectionType: INCLUDE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+      SSESpecification:
+        SSEEnabled: true
+Outputs:
+  ProductExpirationsTable:
+    Description: dynamodb table for tracking trades
+    Value:
+      Fn::GetAtt:
+      - ProductExpirationsTable
+      - Arn
