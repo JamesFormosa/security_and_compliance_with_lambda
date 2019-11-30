@@ -2,7 +2,9 @@ import boto3
 import json
 
 def is_applicable(config_item, event):
+    # the configuration item was captured succesfully
     status = config_item['configurationItemStatus']
+    # the resource to be evaluated has NOT been removed from the rule's scope
     event_left_scope = event['eventLeftScope']
     test = ((status in ['OK', 'ResourceDiscovered']) and
             event_left_scope == False)
@@ -11,13 +13,13 @@ def is_applicable(config_item, event):
 def evaluate_compliance(config_item, rule_parameters):
     if (config_item['resourceType'] != 'AWS::RDS::DBInstance'):
         return 'NOT_APPLICABLE'
-
     elif ('general' in config_item['configuration']['enabledCloudwatchLogsExports']):
         return 'COMPLIANT'
     else:
         return 'NON_COMPLIANT'
 
 def lambda_handler(event, context):
+    print(event)
     invoking_event = json.loads(event['invokingEvent'])
     rule_parameters = json.loads(event['ruleParameters'])
     print(invoking_event)
