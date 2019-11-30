@@ -54,6 +54,8 @@ aws s3 cp s3://YOUR-BUCKET-HERE . --recursive
 15. Click Associate.
 16. Repeat 12-15 for the second Elastic IP and instance.
 
+## WAF Setup
+
 ### Review the Resources Being Protected
 
 In this lab, our WAF is protecting a simple API that provides GET / PUT access to a DynamoDB table through AWS service integration.
@@ -97,6 +99,8 @@ artillery run test.yaml
 5. Repeat steps 1-4 for the second instance. You shgould receive reposnse codes of 403. 
 \* If for some reason you get response codes of 200, confirm that the tst stage is associated withn the Web ACL and the defaule action is set to Block. These are easy steps to miss.
 
+## Automation with Lambda
+
 ### Configure Lambda Function
 
 Going to the console to update our IP Lists is always an option but not one that will scale as our business partnerships grow. A more viable approach will involve some sort of automation, a goal for which AWS Lambda is very well-suited. In this section, we'll explore this option by implementing a very simple lambda function for updating our IP Lists.
@@ -121,7 +125,7 @@ Going to the console to update our IP Lists is always an option but not one that
 10. Click Save.
 11. Click Test from the function console.
 12. Navigate to the IP Set and confirm that there are now two approved IP addresses in our IP Set.
-13. Log back into the second EC2 instance and re-run the following command. You shgould receive reposnse codes of 200 this time.
+13. Log back into the second EC2 instance and re-run the following command. You shgould receive response codes of 200 this time.
 ```
 artillery run test.yaml
 ```
