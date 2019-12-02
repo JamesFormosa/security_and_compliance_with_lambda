@@ -6,8 +6,13 @@ In this lab we'll be looking at the ways lambda integrates with three services r
 
 ![alt text](https://github.com/JamesFormosa/security_and_compliance_with_lambda/blob/master/4%20-%20Resources/images/config-lab-diagram.png)
 
-### AWS WAF
+### AWS WAF Automated Allow-Listing
 
 ![alt text](https://github.com/JamesFormosa/security_and_compliance_with_lambda/blob/master/4%20-%20Resources/images/waf-lab-diagram.png)
+
+### AWS Service Catalog Product Expiration
+
+![alt text](https://github.com/JamesFormosa/security_and_compliance_with_lambda/blob/master/4%20-%20Resources/images/service-catalog-lab.png)
+
 
 

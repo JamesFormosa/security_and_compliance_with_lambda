@@ -4,6 +4,8 @@ Description: 'aws service catalog lab assets
 
   '
 Resources:
+  ProductFilesBucket:
+    Type: AWS::S3::Bucket
   ExpireProductFunctionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -47,7 +49,7 @@ Resources:
   ExpireProductFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://frankfurt-testing/cat/8d30cf773e4f24a046599a2573cbcebc
+      CodeUri: s3://las-event-master/cat/a7a8ddf63dd89d46e5d2f41a4f55dcb1
       Handler: app.lambda_handler
       Runtime: python3.7
       Role:
@@ -89,6 +91,10 @@ Resources:
       SSESpecification:
         SSEEnabled: true
 Outputs:
+  ProductFilesBucket:
+    Description: s3 bucket for product template files
+    Value:
+      Ref: ProductFilesBucket
   ProductExpirationsTable:
     Description: dynamodb table for tracking trades
     Value:

@@ -16,7 +16,7 @@ Resources:
   RDSLogPersistenceRemediationFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://frankfurt-testing/config/cc0cdd8037efc73c30390a3aa9e78edb
+      CodeUri: s3://las-event-master/config/74c82ee83ac96754f69652b3e116b828
       Handler: app.lambda_handler
       Runtime: python3.7
       Role:
@@ -26,7 +26,7 @@ Resources:
   RDSLogPersistenceFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://frankfurt-testing/config/7488156c46b6857307afde5fade98bfc
+      CodeUri: s3://las-event-master/config/66b2fa0ee9ed9d9da32839903e5da82f
       Handler: app.lambda_handler
       Runtime: python3.7
       Role:
@@ -56,10 +56,6 @@ Resources:
             Action:
             - rds:*
             Resource: '*'
-  ConfigSNSTopic:
-    Type: AWS::SNS::Topic
-    Properties:
-      DisplayName: AWS Config Notifications
   LabDatabase:
     Type: AWS::RDS::DBInstance
     Properties:
@@ -79,7 +75,3 @@ Outputs:
       Fn::GetAtt:
       - RDSLogPersistenceFunction
       - Arn
-  ConfigSNSTopic:
-    Description: sns topic for aws config
-    Value:
-      Ref: ConfigSNSTopic

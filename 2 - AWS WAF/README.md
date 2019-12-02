@@ -21,7 +21,7 @@
     
 1. Navigate to the EC2 dashboard and click on Running instances under Resources.
 2. Click the Launch Instance button.
-3. In Step 1: Choose an Amazon Machine Image, open the My AMIs tab and select the artillery image.
+3. In Step 1: Choose an Amazon Machine Image, open the My AMIs tab, click Shared with me and select the artillery image.
 4. In Step 2: Choose an Instance Type, take the default and click Next: Configure Instance Details.
 5. In Step 3: Configure Instance Details, make the following changes:
 
