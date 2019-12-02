@@ -9,7 +9,7 @@ In this lab, we'll be implementing and enforcing an AWS Config rule related to R
 5. Under Amazon S3 bucket*, click Create a bucket You should be able to keep the default Bucket name.
 6. Under Amazon SNS topic, click Stream configuration changes and notifications to an Amazon SNS topic.
 7. Click Create a topic. The default name should be fine.
-7. Under AWS Config role*, click Create AWS Config service-linked role.
+7. Under AWS Config role*, click Use an existing AWS Config service-linked role.
 8. Click Next.
 9. On the AWS Config rules screen, filter by RDS and select rds-instance-public-access-check.
 10. Click Next.
