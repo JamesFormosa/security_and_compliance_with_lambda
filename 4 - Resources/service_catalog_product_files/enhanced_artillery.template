@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    aws service catalog lab assets
+
+Resources:
+
+    StandardArtilleryInstance:
+        Type: AWS::EC2::Instance
+        Properties:
+            ImageId: ami-05b3f10b2ecde86dd
+            InstanceType: t2.large
