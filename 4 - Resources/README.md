@@ -4,11 +4,11 @@ Setup Instructions
 
 Launch a Cloud9 instance with all defaults. As of December 2019, Cloud9 is available in the following regions:
 
- AP | EU | US
+ US | AP | EU
 ----|----|----
-Singapore | Dublin | N. Virginia
-Tokyo | Ireland | Ohio
-|| Oregon
+N. Virginia | Singapore | Dublin 
+Ohio | Tokyo | Ireland 
+Oregon | |
 
 From the Cloud9 bash shell type the following:
 
