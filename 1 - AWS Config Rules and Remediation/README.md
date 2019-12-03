@@ -4,18 +4,18 @@ In this lab, we'll be implementing and enforcing an AWS Config rule related to R
 
 ### Setup AWS Config
 
-3. Navigate to the AWS Config Console and click Get started.
-4. Click the button to turn on recording.
-5. Under Amazon S3 bucket*, click Create a bucket You should be able to keep the default Bucket name.
-6. Under Amazon SNS topic, click Stream configuration changes and notifications to an Amazon SNS topic.
-7. Click Create a topic. The default name should be fine.
-7. Under AWS Config role*, click Use an existing AWS Config service-linked role.
-8. Click Next.
-9. On the AWS Config rules screen, filter by RDS and select rds-instance-public-access-check.
-10. Click Next.
-11. Click Confirm.
-10. Navigate to the RDS dashboard and review the MySQL instance that's running. Notice that the Public accessibility attribute is set to No.
-11. Navigate to back to AWS Config and click Rules and note that our rule is listed as Compliant.
+1. Navigate to the AWS Config Console and click Get started.
+2. Click the button to turn on recording.
+3. Under Amazon S3 bucket*, click Create a bucket You should be able to keep the default Bucket name.
+4. Under Amazon SNS topic, click Stream configuration changes and notifications to an Amazon SNS topic.
+5. Click Create a topic. The default name should be fine.
+6. Under AWS Config role*, click Create AWS Config service-linked role.
+7. Click Next.
+8. On the AWS Config rules screen, filter by RDS and select rds-instance-public-access-check.
+9. Click Next.
+10. Click Confirm.
+11. Navigate to the RDS dashboard and review the MySQL instance that's running. Notice that the Public accessibility attribute is set to No.
+12. Navigate to back to AWS Config and click Rules and note that our rule is listed as Compliant.
 
 ### Implement a Custom Rule in AWS Config
 
