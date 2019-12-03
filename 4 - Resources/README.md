@@ -1,21 +1,5 @@
 ## Setup Instructions
 
-Launch a Cloud9 instance with all defaults. As of December 2019, Cloud9 is available in the following regions:
-
- US | AP | EU
-----|----|----
-N. Virginia | Singapore | Dublin 
-Ohio | Tokyo | Ireland 
-Oregon | |
-
-From the Cloud9 bash shell type the following:
-
-```
-mkdir git_hub
-cd git_hub
-git clone https://github.com/JamesFormosa/security_and_compliance_with_lambda
-```
-
 If you're doing this on your own, you'll need to build an artillery image. Begin by launching an EC2 instance using the Amazon Linux 2 AMI. Select t2.micro for size and then do the following:
 
 1. Connect to the instance over SSH.
@@ -35,7 +19,22 @@ artillery -V
 ```
 5. Create the image by navigating to the EC2 Dashboard, selecting your image and clicking Actions -> Image -> CreateImage.
 
-Share the product template files
+Launch a Cloud9 instance with all defaults. As of December 2019, Cloud9 is available in the following regions:
+
+ US | AP | EU
+----|----|----
+N. Virginia | Singapore | Dublin 
+Ohio | Tokyo | Ireland 
+Oregon | |
+
+From the Cloud9 bash shell type the following:
+
+```
+mkdir git_hub
+cd git_hub
+git clone https://github.com/JamesFormosa/security_and_compliance_with_lambda
+```
+
 
 Create an S3 bucket for SAM package files and then run each of the following, inserting the name of your bucket where indicated.
 
