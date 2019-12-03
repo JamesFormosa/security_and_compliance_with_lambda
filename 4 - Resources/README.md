@@ -35,32 +35,30 @@ npm install -g artillery
 ```
 artillery -V
 ```
+5. Create the image by navigating to the EC2 Dashboard, selecting your image and clicking Actions -> Image -> CreateImage.
 
-Share the artillery image
 Share the product template files
 
+Create an S3 bucket for SAM package files and then run each of the following, inserting the name of your bucket where indicated.
+
 1 - AWS Config Rules and Remediation
-
-sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket las-event-### --s3-prefix config
-
+```
+cd security_and_compliance_with_lambda/1\ -\ AWS\ Config\ Rules\ and\ Remediation/sam-app/
+sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket [YOUR BUCKET NAME HERE] --s3-prefix config
 aws cloudformation deploy --template-file /home/ec2-user/environment/git_hub/security_and_compliance_with_lambda/1\ -\ AWS\ Config\ Rules\ and\ Remediation/sam-app/packaged.yaml --stack-name config-lab-stack  --capabilities CAPABILITY_IAM
-
+```
 2 - AWS WAF
-
-cd into git_hub/security_and_compliance_with_lambda/2\ -\ AWS\ WAF/sam-app/
-
-sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket las-event-### --s3-prefix waf
-
+```
+cd git_hub/security_and_compliance_with_lambda/2\ -\ AWS\ WAF/sam-app/
+sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket [YOUR BUCKET NAME HERE] --s3-prefix waf
 aws cloudformation deploy --template-file /home/ec2-user/environment/git_hub/security_and_compliance_with_lambda/2\ -\ AWS\ WAF/sam-app/packaged.yaml --stack-name waf-lab-stack  --capabilities CAPABILITY_IAM
-
+```
 3 - AWS Service Catalog
-
-cd into git_hub/security_and_compliance_with_lambda/3\ -\ AWS\ Service\ Catalog/sam-app/
-
-sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket las-event-### --s3-prefix cat
-
+```
+cd git_hub/security_and_compliance_with_lambda/3\ -\ AWS\ Service\ Catalog/sam-app/
+sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket [YOUR BUCKET NAME HERE] --s3-prefix cat
 aws cloudformation deploy --template-file /home/ec2-user/environment/git_hub/security_and_compliance_with_lambda/3\ -\ AWS\ Service\ Catalog\/sam-app/packaged.yaml --stack-name cat-lab-stack  --capabilities CAPABILITY_IAM
-
+```
 References:
 
 https://github.com/awslabs/aws-config-rules
