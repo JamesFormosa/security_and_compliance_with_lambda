@@ -18,6 +18,24 @@ cd git_hub
 git clone https://github.com/JamesFormosa/security_and_compliance_with_lambda
 ```
 
+If you're doing this on your own, you'll need to build an artillery image. Begin by launching an EC2 instance using the Amazon Linux 2 AMI. Select t2.micro for size and then do the following:
+
+1. Connect to the instance over SSH.
+2. Install Node.
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+. ~/.nvm/nvm.sh
+nvm install node
+```
+3. Install Artillery.
+```
+npm install -g artillery
+```
+4. Confirm Artillery installation.
+```
+artillery -V
+```
+
 Share the artillery image
 Share the product template files
 
