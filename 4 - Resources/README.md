@@ -53,6 +53,16 @@ cd git_hub/security_and_compliance_with_lambda/2\ -\ AWS\ WAF/sam-app/
 sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket [YOUR BUCKET NAME HERE] --s3-prefix waf
 aws cloudformation deploy --template-file /home/ec2-user/environment/git_hub/security_and_compliance_with_lambda/2\ -\ AWS\ WAF/sam-app/packaged.yaml --stack-name waf-lab-stack  --capabilities CAPABILITY_IAM
 ```
+The Lambda functions in the WAF lab require a lambda layer in order to leverage the latest version of Boto3 which includes WAFv2. Do the folowing to setup that layer:
+
+1. Navigate to the Lambda console and click Layers and then click Create layer.
+2. Name the layer boto3\_1\_10\_28 and upload the python.zip file located in the boto3\_1\_10\_28 subdirectory in the Resources section of this repo.
+3. Select Python 3.7 and Python 3.8 for runtimes and click Create.
+
+An EC2 startup script that thi lab utilizes will download artillery runfiles from an S3 bucket cretated by the script. Do the following to upload those files to that bucket.
+1. Navigate to the resources section of the CloudFormation stack and click through to that bucket.
+2. Upload the files located in the artillery\_run\_files subdirectory in the Resources section of this repo. 
+
 3 - AWS Service Catalog
 ```
 cd git_hub/security_and_compliance_with_lambda/3\ -\ AWS\ Service\ Catalog/sam-app/
