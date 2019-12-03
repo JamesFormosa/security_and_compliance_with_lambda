@@ -12,9 +12,11 @@ Oregon | |
 
 From the Cloud9 bash shell type the following:
 
+```
 mkdir git_hub
 cd git_hub
 git clone https://github.com/JamesFormosa/security_and_compliance_with_lambda
+```
 
 Share the artillery image
 Share the product template files
