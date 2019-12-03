@@ -8,7 +8,7 @@ Launch a Cloud9 instance with all defaults. As of December 2019, Cloud9 is avail
 ----|----|----
 Singapore | Dublin | N. Virginia
 Tokyo | Ireland | Ohio
- | | Oregon
+    |   | Oregon
 
 From the Cloud9 bash shell type the following:
 
