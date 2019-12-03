@@ -1,6 +1,4 @@
-## Resources
-
-Setup Instructions
+## Setup Instructions
 
 Launch a Cloud9 instance with all defaults. As of December 2019, Cloud9 is available in the following regions:
 
@@ -59,8 +57,9 @@ The Lambda functions in the WAF lab require a lambda layer in order to leverage 
 2. Name the layer boto3\_1\_10\_28 and upload the python.zip file located in the boto3\_1\_10\_28 subdirectory in the Resources section of this repo.
 3. Select Python 3.7 and Python 3.8 for runtimes and click Create.
 
-An EC2 startup script that thi lab utilizes will download artillery runfiles from an S3 bucket cretated by the script. Do the following to upload those files to that bucket.
-1. Navigate to the resources section of the CloudFormation stack and click through to that bucket.
+An EC2 startup script that this lab utilizes will download artillery runfiles from an S3 bucket cretated by the script. Do the following to upload those files to that bucket.
+
+1. Navigate to the resources section of the CloudFormation stack and click through to that bucket (ResourceId = ArtilleryFilesBucket).
 2. Upload the files located in the artillery\_run\_files subdirectory in the Resources section of this repo. 
 
 3 - AWS Service Catalog
@@ -69,6 +68,12 @@ cd git_hub/security_and_compliance_with_lambda/3\ -\ AWS\ Service\ Catalog/sam-a
 sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket [YOUR BUCKET NAME HERE] --s3-prefix cat
 aws cloudformation deploy --template-file /home/ec2-user/environment/git_hub/security_and_compliance_with_lambda/3\ -\ AWS\ Service\ Catalog\/sam-app/packaged.yaml --stack-name cat-lab-stack  --capabilities CAPABILITY_IAM
 ```
+
+This lab leverages two extremely simple product files. Do the following to upload these files to S3.
+
+1. Navigate to the resources section of the CloudFormation stack and click through to that bucket (ResourceId = ProductFilesBucket).
+2. Upload the files located in the service\_catalog\_product\_files subdirectory in the Resources section of this repo.
+
 References:
 
 https://github.com/awslabs/aws-config-rules
