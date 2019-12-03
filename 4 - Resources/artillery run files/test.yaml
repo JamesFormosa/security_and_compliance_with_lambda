@@ -1,0 +1,22 @@
+config:
+  target: "{{ $processEnvironment.TARGET }}"
+  phases:
+    - duration: 10
+      arrivalRate: 2
+  payload:
+    path: "trades.csv"
+    fields:
+      - "market"
+      - "trade_date"
+      - "quantity"
+      - "transaction_type"
+scenarios:
+  - flow:
+      - log: "New virtual user running"
+      - post:
+          url: "/trades"
+          json:
+            market: "{{market}}"
+            trade_date: "{{trade_date}}"
+            quantity: "{{quantity}}"
+            transaction_type: "{{transaction_type}}"
