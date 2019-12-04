@@ -9,13 +9,17 @@
 1. Navigate to the EC2 dashboard and click on Security groups under Resources.
 2. Click the check-box next to the security group with a Group Name of "defualt" and open the Inbound tab.
 3. Click the Edit button and on the Edit inbound rules dialog box click the Add Rule button. 
-4. Set Type to "SSH", Source to "My IP" and click the Save button.
+4. Set Type to "SSH", Source to the security group of your Cloud9 instance.
 
 ### Create and download a key pair.
     
-1. Navigate to the EC2 dashboard and click on Keys pairs under Resources.
-2. Click on Create Key Pair, enter a name, and click Create.
-3. Download the Key.
+From a Cloud9 terminal window run the following:
+
+```
+mkdir waf_lab
+cd waf_lab
+aws ec2 create-key-pair --key-name buckeye-key --query 'KeyMaterial' --output text > buckeye-key.pem
+```
 
 ### Launch the artillery instances.
     

@@ -33,7 +33,7 @@ Resources:
   UpdateIPListFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://las-event-master/waf/b901cd876a6777ffeef07d0e74e6a2aa
+      CodeUri: s3://las-event-master/waf/24c690fbcf5a32ae4f795709b0347559
       Handler: app.lambda_handler
       Runtime: python3.7
       Role:
